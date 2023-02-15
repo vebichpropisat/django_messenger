@@ -13,7 +13,9 @@ def messages_list(request):
         messages = Message.objects.all()
         serializer = MessageSerializer(messages, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-    serializer = MessageSerializer(data=request.data)
+    serializer = MessageSerializer(
+        data=request.data, context={"sender": request.user.pk}
+    )
     serializer.is_valid(raise_exception=True)
     message = serializer.save()
     return Response(data=MessageSerializer(message).data, status=status.HTTP_200_OK)
