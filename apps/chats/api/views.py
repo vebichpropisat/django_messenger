@@ -22,3 +22,8 @@ class MessagesAPI(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         message = serializer.save()
         return Response(data=MessageSerializer(message).data, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        if since_date := self.request.GET.get("created_at"):
+            return Message.objects.filter(date_created__gte=since_date)
+        return Message.objects.all()
