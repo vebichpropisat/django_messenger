@@ -7,7 +7,7 @@ class Message(models.Model):
     """Message model."""
 
     text = models.TextField(max_length=1000)
-    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

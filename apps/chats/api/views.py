@@ -17,13 +17,13 @@ class MessagesAPI(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = MessageSerializer(
-            data=request.data, context={"sender": request.user.pk}
+            data=dict(sender=request.user.pk, **request.data.dict())
         )
         serializer.is_valid(raise_exception=True)
         message = serializer.save()
         return Response(data=MessageSerializer(message).data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
-        if since_date := self.request.GET.get("created_at"):
-            return Message.objects.filter(date_created__gte=since_date)
+        if since_date := self.request.GET.get("after"):
+            return Message.objects.filter(created_at__gt=since_date)
         return Message.objects.all()
